@@ -71,7 +71,7 @@
 #### 3.2.2 Creature的内部重要函数
       ·重要函数大多是虚函数，即依赖接口/抽象，通过继承，来实现不同生物的不同移动模式，不同战斗模式
 ---
-      **·1.run**。每个creature都是一个线程，彼此之间要互斥完成移动和战斗。
+      ·1.run。每个creature都是一个线程，彼此之间要互斥完成移动和战斗。
     所有的生物共享三个锁:移动锁(movelock)，战斗锁(fightlock)，生命锁(lifelock)。这些锁对象中都含有一个int值。
     在运行时，主要通过上层某控制线程与下层所有creature线程共同完成战斗流程。
     大致流程为:
@@ -138,20 +138,19 @@
       ·最后退出战斗互斥块，重新回到循环开头
 ---
 ---
-      **·2.虚函数fight** 每个生物战斗方式不同，需要继承者实现。大体上是根据地图寻找在攻击范围的敌人，然后取随机值
-    判定胜负。
-    攻击越高，胜率越高。负的一方调用其die函数。
+      ·2.虚函数fight每个生物战斗方式不同，需要继承者实现。大体上是根据地图寻找在攻击范围的敌人，然后取随机值
+    判定胜负。攻击越高，胜率越高。负的一方调用其die函数。
 ---
-      **·3.die** 让该生物体死亡(lifestate置0)，并通过一个arraylist<Creature>，获得关联生物的引用，调用他们的effect
+      ·3.die 让该生物体死亡(lifestate置0)，并通过一个arraylist<Creature>，获得关联生物的引用，调用他们的effect
     产生一些影响。如每个葫芦娃的arraylist中都装着爷爷，葫芦娃死亡时，调用爷爷effect，影响爷爷的战斗属性
 ---
-      **·4.虚函数effect** 表示其他生物死亡时对该生物造成的影响，比如所有葫芦娃死去时，爷爷攻击力大幅度上升，就是通过
+      ·4.虚函数effect 表示其他生物死亡时对该生物造成的影响，比如所有葫芦娃死去时，爷爷攻击力大幅度上升，就是通过
     爷爷类中实现的effect完成的
 ---
-      **·5.moveTo**,通过使用每个生物都共用的地图，在地图上探索上下左右四个方向是否可以通行。若是边界，或该区域有人，则表示
+      ·5.moveTo,通过使用每个生物都共用的地图，在地图上探索上下左右四个方向是否可以通行。若是边界，或该区域有人，则表示
     该方向被堵。四方向均被堵则该生物本轮不行动。在剩下的可以移动的方向中，随机选择一个方向移动。
 ---
-      **·6.getRecord,getWarning**:Creature需要朝上层调用者发送一些信息，比如这一轮该生物移动到了哪，这一轮该生物和谁进行
+      ·6.getRecord,getWarning:Creature需要朝上层调用者发送一些信息，比如这一轮该生物移动到了哪，这一轮该生物和谁进行
     了战斗,战斗结果如何，等等。Creature中有String变量record和warning，每进行一些内部行为时，就在这些String后append新信息
     并提供get函数给上层使用，get函数return String,并把String置空，准备下一轮。普通的移动战斗放入record中，一些特殊信息，
     如死亡的二娃会减少四娃五娃的攻击范围，会放入warning中，在最上层图形界面中会用红色字体标出。
@@ -197,7 +196,7 @@
     结束所有线程。如果此时正在进行战斗，则判定为异常结束，战斗记录不会被保存。
 #### 3.5.2 线程控制
 ---
-    **1.javafx线程初探**
+    1.javafx线程初探
       ·javafx中，只能在javafx的主线程中，才能对组件进行控制操作，如调整生物头像坐标，让生物头像变灰表示死亡等
       ·在构建初期，我曾尝试在javafx主线程中令生物体移动战斗，然后每一轮结束立刻更新界面，体现出生物体的移动和死亡。但是，主
     线程中会出现先移动战斗了好几轮，才回头刷新一次界面的情况。
@@ -218,14 +217,14 @@
       ·javafx主线程->键盘空格的战斗线程，键盘L的读取线程->Creature线程，组件更新Platform.runLater线程。
       ·其中，空格战斗线程需要和Creature线程达成同步，为程序核心线程，逻辑如下
 ---
-    **2.组件更新线程**
+    2.组件更新线程
       ·部分组件更新使用Lamda表达式，如Platform.runLater(()->updateSPPlace());,直接使用一行代码调用相关函数，更新组件，
     简单方便
       ·展示特效也需要使用组件更新的Platform.runLater,具体用函数effectShow(String str)，接受一个战斗信息函数str,根据str
     的战斗信息，在不同地方展现不同的普通攻击，远程攻击特效。先runLater,将特效图像放到指定地点，显示图像setVisible(true)，
     sleep一定时间后再runLater setVisible(false)，体现一种闪现特效的效果。
 ---
-    **3.战斗线程**
+    3.战斗线程
 ``` java
     inititilize...
     Thread thread = new Thread() 
@@ -288,7 +287,7 @@
       ·退出while块后，先把所有Creature打断(threadInterrupt)，然后关闭记录文件。如果是被强制退出，在注册过的监听器中，
     state会被置于-1。而state为-1时，当前的记录文件会被删除，保持记录文件完整性
 ---
-    **4.读取线程**
+    4.读取线程
       ·同样需要新开一个线程，不能在javafx中串行计算-更新
       ·仍然使用和战斗一样的初始函数，申请一个hlowcontrol，但是不使用其中的Creature线程
       ·使用FileChooser，调出文本选择框，默认显示路径是jar所在根目录的/rec/
@@ -346,24 +345,30 @@
       ·Direction：内部有一个static int方向数组，存了八个方向，一个static int direcnum，表示使用几个方向。程序中使用4个
     方向，direcnum被设为4。类似当做c里的全局变量使用
 ## 4.程序效果截图
-1.mvn test clean package可以运行
+    1.mvn test clean package可以运行
 ![mvnpackage1](https://github.com/shi1ro/finalproject/blob/master/readmepic/mvn%201.jpg)
 ![mvnpackage2](https://github.com/shi1ro/finalproject/blob/master/readmepic/mvn2.jpg)
 ![mvnpackage3](https://github.com/shi1ro/finalproject/blob/master/readmepic/mvn3.jpg)
-2.命令行jar 运行
+    
+    2.命令行jar 运行
 ![runjar](https://github.com/shi1ro/finalproject/blob/master/readmepic/jar%E8%BF%90%E8%A1%8C.jpg)
-可以看到执行后窗口已经出现，可以开始战斗
-3.战斗界面
+    
+    可以看到执行后窗口已经出现，可以开始战斗
+    3.战斗界面
 ![running1](https://github.com/shi1ro/finalproject/blob/master/readmepic/fight1.jpg)
 ![running2](https://github.com/shi1ro/finalproject/blob/master/readmepic/fight2.jpg)
-正常战斗，可以看到战斗特效与右方信息栏
+     
+    正常战斗，可以看到战斗特效与右方信息栏
 ![running3](https://github.com/shi1ro/finalproject/blob/master/readmepic/contract.jpg)
-缩圈，全场毒雾特效
+      
+    缩圈，全场毒雾特效
 ![running4](https://github.com/shi1ro/finalproject/blob/master/readmepic/contract1.jpg)
-缩圈时战斗信息
+         
+    缩圈时战斗信息
 ![load1](https://github.com/shi1ro/finalproject/blob/master/readmepic/load.jpg)
 ![load2](https://github.com/shi1ro/finalproject/blob/master/readmepic/load1.jpg)
-正常读取时，跳出文本选择框，选择后信息栏会显示相关信息
+    
+    正常读取时，跳出文本选择框，选择后信息栏会显示相关信息
 
 ## 5.其他/感想
       ·不足：
