@@ -1,0 +1,58 @@
+@startuml
+abstract class Creature
+{
+int id;
+char sk;
+Point creapoi;
+BattleMap map;
+ArrayList<Creature> relationcreas;
+....
+__abstract__
+fight(),initFightData()
+....
+__important function__
+run()
+normalNearFight()
+normalDistantFight()
+...
+}
+class FirstHlw extends Creature
+class SecondHlw extends Creature
+class ThirdHlw extends Creature
+class FourthHlw extends Creature
+class FifthHlw extends Creature
+class SixthHlw extends Creature
+class SeventhHlw extends Creature
+class Grandpa extends Creature
+class Scor extends Creature
+class Snake extends Creature
+class Frog extends Creature
+class BattleMap
+{
+  char map[][]
+  int map[][]
+  ...
+}
+Creature --* BattleMap
+
+class Control
+{
+  BattleMap map
+  ArrayList<Creature>
+}
+Control --* BattleMap
+Control --* Creature
+
+class App
+{
+  javafx components,threads control...
+  Control hlwcontrol
+}
+App --* Control
+
+class Main
+{
+  static public void main(String[] args);
+}
+Main --* App
+@enduml
