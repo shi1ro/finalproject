@@ -53,15 +53,22 @@
 ### 3.1 总体类设计
 ![class](https://github.com/shi1ro/finalproject/blob/master/readmepic/classpic.png)
       ·未标出测试类
-      ·多使用聚集
+      ·多使用聚集，生物中使用抽象类继承，阵型中使用接口继承
       ·整体是面向最底层的抽象Creature，然后一层一层向上封装。Creature和BattleMap构成底层，然后是Control整体控制，
     最后图形界面App补上GUI，最后根据要求将main放在Main类中
       ·底层的Creature会被葫芦娃，爷爷，蛇精，蝎子，蟾蜍类来填充。Creature内部的主要线程run函数使用的fight等函数都是
     虚函数，只要上层填充，或者重写一些方法，就能实现不同生物进行不同的移动战斗方式，却使用同一套代码run，极大减少
     了代码复用，做到依赖抽象的依赖倒置
       ·上层Control将多个Creature用ArrayList组合成整体进行整体化操作，为更上层图形界面类提供一些整体化控制所有生物的
-    方法。ArrayList<Creature>中只能放入Creature的subclass,由于Creature是抽象类。在Control中会new FirstHlw,
+    方法。ArrayList<Creature>中只能放入Creature的subclass,由于Creature是抽象类，在Control中会new FirstHlw,
     new Grandpa等，然后放入ArrayList。
+      ·同时，上层Control中包含了G1LineUp，G2LineUp两个接口的实例化对象， 表示服务于葫芦娃(group1)的阵型和服务于
+    蛇精(group2)的阵型，这两个接口都继承于LineUp这一个阵型最底层接口，接口函数为lineup,lineup函数接受一系列生物
+    (ArrayList<Creautre>)，然后来把这些Creature moveTo到相应的地方。G1,G2两个接口分别实现了三个阵型，在准备开始时用
+    QWE,ASD调用。
+      ·上层Control还应用了工厂模式，包含了一个生物工厂，通过生物工厂的get方法来获得Creature实例化对象。Creature中有许多的公用锁，在
+    分别初始化时要反复填写这些相同引用地锁，费时费力。使用生物工厂，先用这些锁初始化生物工厂的锁变量，然后只要给生物工厂
+    一个生物编号(如1表示爷爷，2表示大娃，……)和一个初始点，就能帮助生物做好全套初始化工作。
       ·最后的App类中使用Control中提供的各种整体性方法，并将其与图形化界面相结合，实现最后的程序逻辑
       ·Main中new一个App，调用App中初始化函数即可
       ·具体类实现见下
@@ -342,10 +349,14 @@
       ·该测试在类ControlTest中
       ·类ResourceTest中尝试对图片资源进行测试，但是由于jar打包后资源路径相对于.class会变化，jar路径也会变化，要定位到指定
     地点较为困难，就放弃了该类测试，源文件代码全部被注释，不再使用
-### 3.7 其他辅助类
+### 3.7 其他核心类
+      ·CreatureFactory：生物工厂，整体化地生产不同生物实例，减少重复代码量，内部只有一个构造函数和get函数，
+      ·LineUp及其implements：阵型接口，专门负责为葫芦娃排队，G1LineUp的implements实现将葫芦娃排在左边，G2LineUp将蛇精排
+    在右边
+### 3.8 其他辅助类
       ·Mylock：一开始准备使用Integer，发现使用等号时是传值，导致不同生物wait在不同地方。所以新建了一个class，专门负责锁，
     其中只有一个公开变量int x，方便操作。
-      ·Point：其中有int x,int y,重载了toString，返回(x,y)样式字符串，大体上只是个struct{}
+      ·Point：其中有int x,int y,重载了toString，返回(x,y)样式字符串，大体上当成一个struct{}使用。
       ·Direction：内部有一个static int方向数组，存了八个方向，一个static int direcnum，表示使用几个方向。程序中使用4个
     方向，direcnum被设为4。类似当做c里的全局变量使用
 ## 4.程序效果截图
@@ -386,3 +397,4 @@
     javafx或其他使用类的基础实现，才能更好理解示例代码
       ·许多地方写得过于static,不大dynamic,同时写好的底层框架基本把自己关住了，一些后期想到的功能难以添加，又没有时间重构，
     只能作罢，感觉可更新上限也很低，过于“一次性”。让我更加感受到了底层构建，整体思路，面向对象设计原则的重要性。
+      ·仍然改变不了过程式设计的通病，对“对象”“个体""实例”理解还不够深刻，希望在今后其他课程中可以继续锻炼。
