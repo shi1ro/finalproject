@@ -432,7 +432,7 @@ class FourthHlw extends Creature
       return;
     if(command == "LeaderDie")//grandpa die
     {
-      attackpwr -= 1;
+      ;
     }
     else if(command == "HuLuWaDie")//second die
     {
@@ -441,7 +441,7 @@ class FourthHlw extends Creature
   }
   void initFightData()
   {
-    attackpwr = 3;
+    attackpwr = 1;
     attackmode = 2;
     attackrange = 3;
   }
@@ -491,7 +491,7 @@ class FifthHlw extends Creature
       return;
     if(command == "LeaderDie")//grandpa die
     {
-      attackpwr -= 1;
+      ;
     }
     else if(command == "HuLuWaDie")//second die
     {
@@ -500,7 +500,7 @@ class FifthHlw extends Creature
   }
   void initFightData()
   {
-    attackpwr = 3;
+    attackpwr = 1;
     attackmode = 2;
     attackrange = 3;
   }
@@ -670,7 +670,7 @@ class Grandpa extends Creature
       if(count == 0)
       {
         addWarning("all HuLuWa die!Grandpa power up!");
-        System.out.println("gnp angry!");
+   //     System.out.println("gnp angry!");
         attackpwr = 30;
       }
     }

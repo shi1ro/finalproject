@@ -7,6 +7,9 @@ public class Control
 {
   ArrayList<Creature> arrcreas;
   BattleMap map;
+  CreatureFactory creafac;
+  G1LineUp g1lineups[] = {new G1LineUp1(),new G1LineUp2(),new G1LineUp3()};
+  G2LineUp g2lineups[] = {new G2LineUp1(),new G2LineUp2(),new G2LineUp3()};
   Mylock movelock = new Mylock(0);
   Mylock fightlock = new Mylock(0);
   Mylock lifelock = new Mylock(0);
@@ -19,6 +22,7 @@ public class Control
   Control(ArrayList<Creature> arr,BattleMap m){
     arrcreas = arr;
     map = m;
+    creafac = new CreatureFactory(m,lifelock,movelock,fightlock);
     group1dieofpoi = 0;
     group2dieofpoi = 0;
     initLineupAndRela1();
@@ -30,14 +34,14 @@ public class Control
   {
     if(arrcreas.size() != 0)
       arrcreas.clear();
-    Creature gnp = new Grandpa(map, 1, new Point(0,5), lifelock,movelock, fightlock);
-    Creature hlw1 = new FirstHlw(map, 1, new Point(3,5), lifelock,movelock, fightlock);
-    Creature hlw2 = new SecondHlw(map, 1, new Point(2,4),lifelock, movelock, fightlock);
-    Creature hlw3 = new ThirdHlw(map, 1, new Point(2,6), lifelock,movelock, fightlock);
-    Creature hlw4 = new FourthHlw(map, 1, new Point(1,3), lifelock,movelock, fightlock);
-    Creature hlw5 = new FifthHlw(map, 1, new Point(1,7), lifelock,movelock, fightlock);
-    Creature hlw6 = new SixthHlw(map, 1, new Point(0,2), lifelock,movelock, fightlock);
-    Creature hlw7 = new SeventhHlw(map, 1, new Point(0,8), lifelock,movelock, fightlock);
+    Creature hlw1 = creafac.get(1, new Point(3,5),1);
+    Creature hlw2 = creafac.get(1, new Point(2,4),2);
+    Creature hlw3 = creafac.get(1, new Point(2,6),3);
+    Creature hlw4 = creafac.get(1, new Point(1,3),4);
+    Creature hlw5 = creafac.get(1, new Point(1,7),5);
+    Creature hlw6 = creafac.get(1, new Point(0,2),6);
+    Creature hlw7 = creafac.get(1, new Point(0,8),7);
+    Creature gnp = creafac.get(1, new Point(0,5),8);
     arrcreas.add(gnp);
     arrcreas.add(hlw1);
     arrcreas.add(hlw2);
@@ -78,10 +82,10 @@ void initLineupAndRela2()//init after group1
   ArrayList<Creature> snakerela = new ArrayList<Creature>();
     for(int i = 0;i < frognum;i++)
     {
-      Frogs[i] = new Frog(map,i , new Point(7,i), lifelock,movelock, fightlock);
+      Frogs[i] = creafac.get(i, new Point(7,i),9);
     }
-    Creature scor = new Scorpion(map, 1, new Point(8,4), lifelock,movelock, fightlock);
-    Creature snake = new Snake(map, 1, new Point(8,5), lifelock,movelock, fightlock);
+    Creature scor = creafac.get(1, new Point(8,4),10);
+    Creature snake = creafac.get(1, new Point(8,5),11);
     for(int i = 0;i < frognum;i++)
     {
       arrcreas.add(Frogs[i]);
@@ -120,6 +124,26 @@ String liveAreaReduce()
         }
     }
     return record;
+}
+void creasLineUp(int group,int lineupid)
+{
+    ArrayList<Creature> tmparrcreas= new ArrayList<Creature>();
+    if(group == 1)
+    {
+      for(int i = 0;i < group1limit;i++)
+      {
+        tmparrcreas.add(arrcreas.get(i));
+      }
+      g1lineups[lineupid].lineup(tmparrcreas);
+    }
+    else
+    {
+      for(int i = group1limit;i < arrcreas.size();i++)
+      {
+        tmparrcreas.add(arrcreas.get(i));
+      }
+      g2lineups[lineupid].lineup(tmparrcreas);
+    }
 }
 int checkDRAW()
     {

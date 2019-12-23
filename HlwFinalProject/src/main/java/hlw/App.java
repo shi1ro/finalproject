@@ -66,7 +66,7 @@ public class App {
      ImageView imvpoisons[] = new ImageView[creanum];
      ImageView imvattacks[] = new ImageView[creanum/2];
 
-     Text battlenormalrecord = new Text("Welcome!\npress space to begin fight\npress 'L' to load a fight\npress up or down to change speed\n");
+     Text battlenormalrecord = new Text("Welcome!\npress space to begin fight\npress 'L' to load a fight");
      Text battlewarningrecord = new Text("");
 
      Canvas canvas = new Canvas(1000, 1000);
@@ -701,19 +701,75 @@ public class App {
             KeyCode code = e.getCode();
             if (code.equals(KeyCode.UP)) 
             {
-                if(state != 0 && runspeed > 125)
+                if(state > 1 && runspeed > 125)
                     runspeed = runspeed / 2;
             }
             else if (code.equals(KeyCode.DOWN))
             {
-                if(state != 0 && runspeed < 2000)
+                if(state > 1 && runspeed < 2000)
                     runspeed = runspeed * 2;
+            }
+            else if(code.equals(KeyCode.Q))
+            {
+                if(state == 1)
+                {
+                    hlwcontrol.creasLineUp(1, 0);
+                }
+                updateSPPlace();
+            }
+            else if(code.equals(KeyCode.W))
+            {
+                if(state == 1)
+                {
+                    hlwcontrol.creasLineUp(1, 1);
+                }
+                updateSPPlace();
+            }
+            else if(code.equals(KeyCode.E))
+            {
+                if(state == 1)
+                {
+                    hlwcontrol.creasLineUp(1, 2);
+                }
+                updateSPPlace();
+            }
+            else if(code.equals(KeyCode.A))
+            {
+                if(state == 1)
+                {
+                    hlwcontrol.creasLineUp(2, 0);
+                }
+                updateSPPlace();
+            }
+            else if(code.equals(KeyCode.S))
+            {
+                if(state == 1)
+                {
+                    hlwcontrol.creasLineUp(2, 1);
+                }
+                updateSPPlace();
+            }
+            else if(code.equals(KeyCode.D))
+            {
+                if(state == 1)
+                {
+                    hlwcontrol.creasLineUp(2, 2);
+                }
+                updateSPPlace();
             }
             else if(code.equals(KeyCode.SPACE))
             {
                 if(state == 0)
                 {
+                    battleInit();
                     state = 1;
+                    battlenormalrecord.setText("press QWE to set hlw's lineup\npress ASD to set frogs lineup\npress space to begin");
+                    battlewarningrecord.setText("");
+                    return;
+                }
+                else if(state == 1)
+                {
+                    state = 2;
                 }
                 else
                 {
@@ -721,7 +777,6 @@ public class App {
                 }
                 battlenormalrecord.setText("Fight is ready to begin!\n");
                 battlewarningrecord.setText("");
-                battleInit();
                 try{fileOutInit();}            
                 catch (FileNotFoundException exce) {  
                     System.out.println("File is not found!");  
@@ -777,7 +832,7 @@ public class App {
             {
                 if(state == 0)
                 {
-                    state = 2;
+                    state = 3;
                 }
                 else
                 {
