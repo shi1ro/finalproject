@@ -52,26 +52,27 @@
 ## 3.类的设计与系统内部实现
 ### 3.1 总体类设计
 ![class](https://github.com/shi1ro/finalproject/blob/master/readmepic/classpic.png)
-      ·未标出测试类
-      ·多使用聚集，生物中使用抽象类继承，阵型中使用接口继承
-      ·整体是面向最底层的抽象Creature，然后一层一层向上封装。Creature和BattleMap构成底层，然后是Control整体控制，
-    最后图形界面App补上GUI，最后根据要求将main放在Main类中
-      ·底层的Creature会被葫芦娃，爷爷，蛇精，蝎子，蟾蜍类来填充。Creature内部的主要线程run函数使用的fight等函数都是
-    虚函数，只要上层填充，或者重写一些方法，就能实现不同生物进行不同的移动战斗方式，却使用同一套代码run，极大减少
-    了代码复用，做到依赖抽象的依赖倒置
-      ·上层Control将多个Creature用ArrayList组合成整体进行整体化操作，为更上层图形界面类提供一些整体化控制所有生物的
-    方法。ArrayList<Creature>中只能放入Creature的subclass,由于Creature是抽象类，在Control中会new FirstHlw,
-    new Grandpa等，然后放入ArrayList。
-      ·同时，上层Control中包含了G1LineUp，G2LineUp两个接口的实例化对象， 表示服务于葫芦娃(group1)的阵型和服务于
-    蛇精(group2)的阵型，这两个接口都继承于LineUp这一个阵型最底层接口，接口函数为lineup,lineup函数接受一系列生物
-    (ArrayList<Creautre>)，然后来把这些Creature moveTo到相应的地方。G1,G2两个接口分别实现了三个阵型，在准备开始时用
-    QWE,ASD调用。
-      ·上层Control还应用了工厂模式，包含了一个生物工厂，通过生物工厂的get方法来获得Creature实例化对象。Creature中有许多的公用锁，在
-    分别初始化时要反复填写这些相同引用地锁，费时费力。使用生物工厂，先用这些锁初始化生物工厂的锁变量，然后只要给生物工厂
-    一个生物编号(如1表示爷爷，2表示大娃，……)和一个初始点，就能帮助生物做好全套初始化工作。
-      ·最后的App类中使用Control中提供的各种整体性方法，并将其与图形化界面相结合，实现最后的程序逻辑
-      ·Main中new一个App，调用App中初始化函数即可
-      ·具体类实现见下
+    
+       ·未标出测试类
+       ·多使用聚集，生物中使用抽象类继承，阵型中使用接口继承
+       ·整体是面向最底层的抽象Creature，然后一层一层向上封装。Creature和BattleMap构成底层，然后是Control整体控制，
+     最后图形界面App补上GUI，最后根据要求将main放在Main类中
+       ·底层的Creature会被葫芦娃，爷爷，蛇精，蝎子，蟾蜍类来填充。Creature内部的主要线程run函数使用的fight等函数都是
+     虚函数，只要上层填充，或者重写一些方法，就能实现不同生物进行不同的移动战斗方式，却使用同一套代码run，极大减少
+     了代码复用，做到依赖抽象的依赖倒置
+       ·上层Control将多个Creature用ArrayList组合成整体进行整体化操作，为更上层图形界面类提供一些整体化控制所有生物的
+     方法。ArrayList<Creature>中只能放入Creature的subclass,由于Creature是抽象类，在Control中会new FirstHlw,
+     new Grandpa等，然后放入ArrayList。
+       ·同时，上层Control中包含了G1LineUp，G2LineUp两个接口的实例化对象， 表示服务于葫芦娃(group1)的阵型和服务于
+     蛇精(group2)的阵型，这两个接口都继承于LineUp这一个阵型最底层接口，接口函数为lineup,lineup函数接受一系列生物
+     (ArrayList<Creautre>)，然后来把这些Creature moveTo到相应的地方。G1,G2两个接口分别实现了三个阵型，在准备开始时用
+     QWE,ASD调用。
+       ·上层Control还应用了工厂模式，包含了一个生物工厂，通过生物工厂的get方法来获得Creature实例化对象。Creature中有许多的
+     公用锁，在分别初始化时要反复填写这些相同引用地锁，费时费力。使用生物工厂，先用这些锁初始化生物工厂的锁变量，然后只要给
+     生物工厂一个生物编号(如1表示爷爷，2表示大娃，……)和一个初始位置点，就能帮助生物做好全套初始化工作。
+       ·最后的App类中使用Control中提供的各种整体性方法，并将其与图形化界面相结合，实现最后的程序逻辑
+       ·Main中new一个App，调用App中初始化函数即可
+       ·具体类实现见下
 ### 3.2 Creature类
 #### 3.2.1 Creature内部变量
       ·每一个Creature表示一个生物
