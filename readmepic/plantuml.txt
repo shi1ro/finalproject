@@ -16,6 +16,25 @@ normalNearFight()
 normalDistantFight()
 ...
 }
+interface LineUp
+{
+  public void lineup();
+}
+interface G1LineUp implements LineUp
+{
+}
+interface G2LineUp implements LineUp
+{
+}
+class G1LineUp1 implements G1LineUp
+{
+   //hlw heyi,changshe...
+}
+class G2LineUp1 implements G2LineUp
+{
+   //frogs heyi,changshe....
+}
+
 class FirstHlw extends Creature
 class SecondHlw extends Creature
 class ThirdHlw extends Creature
@@ -42,10 +61,16 @@ class Control
 }
 Control --* BattleMap
 Control --* Creature
-
+Control --* G1LineUp
+Control --* G2LineUp
+Control --* CreatureFactory
+class CreatureFactory
+{
+  Creature get()
+}
 class App
 {
-  javafx components,threads control...
+  javafx components,GUI threads control...
   Control hlwcontrol
 }
 App --* Control
